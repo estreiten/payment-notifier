@@ -4,6 +4,11 @@
   "description": "Service that notifies through e-mail when receiven a new BTC transaction on your wallet",
   "main": "server.js",
   "author": "Ezequiel Streitenberger <streitenberger.ezequiel@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/estreiten/payment-notifier.git"
+  },
+  "homepage": "https://github.com/estreiten/payment-notifier",
   "dependencies": {
     "nodemailer": "^6.3.0"
   }
