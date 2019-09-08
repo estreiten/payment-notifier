@@ -27,7 +27,7 @@ const httpOptions = {
 };
 let notified = false;
 
-setInterval(verify, 0.2 * MS_PER_MINUTE);
+setInterval(verify, config.minutes * MS_PER_MINUTE);
 
 function verify() {
   https.request(httpOptions, (response) => {

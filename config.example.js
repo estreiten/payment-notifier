@@ -4,5 +4,6 @@ module.exports = {
   mailService: 'gmail',
   mailFrom: 'notifier@mail.com',
   mailTo: 'john.doe@mail.com',
-  btcAddress: '123jh1uih3gads8ew1233asdi'
+  btcAddress: '123jh1uih3gads8ew1233asdi',
+  minutes: 15
 }
