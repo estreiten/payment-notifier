@@ -31,6 +31,9 @@ setInterval(verify, config.minutes * MS_PER_MINUTE);
 
 function verify() {
   https.request(httpOptions, (response) => {
+    if (config.logLevel === 'all') {
+      console.log(new Date().toUTCString(), `http request to Blockcyper to get ${config.btcAddress} transactions info`);
+    }
     let responseData = '';
     response.setEncoding('utf8');
 
@@ -39,29 +42,66 @@ function verify() {
     });
 
     response.once('error', (err) => {
-      console.error(err);
+      if (config.logLevel !== 'silent') {
+        console.error(new Date().toUTCString(), err);
+      }
     });
 
     response.on('end', () => {
       try {
-        const transactions = JSON.parse(responseData).txrefs;
-        if (transactions.some(transaction => isToday(transaction.confirmed))) {
-          if (!notified) {
-            notified = true;
-            //send mail
-            transporter.sendMail(mailOptions, (err, info) => {
-              if (err) {
-                console.error(err);
-              } else {
-                console.info('Email sent: ' + info.response);
-              }
-            });
+        if (config.logLevel === 'all') {
+          console.log(new Date().toUTCString(), `http request to Blockcyper finished`);
+        }
+        const respJSON = JSON.parse(responseData);
+        if (respJSON.txrefs) {
+          const transactions = respJSON.txrefs;
+          if (config.logLevel === 'all') {
+            console.log(new Date().toUTCString(), `looking for transactions confirmed today`);
           }
-        } else {  //reset the "notified" flag for the next day
-          notified = false;
+          if (transactions.some(transaction => isToday(transaction.confirmed))) {
+            if (config.logLevel === 'all') {
+              console.log(new Date().toUTCString(), `there are transactions confirmed today`);
+              console.log(new Date().toUTCString(), `verify if the user was already notified today`);
+            }
+            if (notified) {
+              if (config.logLevel === 'all') {
+                console.log(new Date().toUTCString(), `was notified today, I won't notify new transactions until tomorrow`);
+              }
+            } else {
+              notified = true;
+              if (config.logLevel === 'all') {
+                console.log(new Date().toUTCString(), `trying to send an e-mail to ${config.mailTo} notifying new transactions today`);
+              }
+              transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                  if (config.logLevel !== 'silent') {
+                    console.error(new Date().toUTCString(), err);
+                  }
+                } else {
+                  if (config.logLevel === 'all') {
+                    console.info(new Date().toUTCString(), 'Email sent: ' + info.response);
+                  }
+                }
+              });
+            }
+          } else {  //reset the "notified" flag for the next day
+            if (config.logLevel === 'all') {
+              console.log(new Date().toUTCString(), `there are no transactions confirmed today, I will notify the next transaction that happens`);
+            }
+            notified = false;
+          }
+        } else {
+          if (config.logLevel !== 'silent') {
+            console.error(new Date().toUTCString(), respJSON);
+          }
+        }
+        if (config.logLevel === 'all') {
+          console.log(new Date().toUTCString(), `waiting ${config.minutes} minutes to verify again`);
         }
       } catch (e) {
-        console.warn('Could not parse response from options.hostname: ' + e);
+        if (config.logLevel !== 'silent') {
+          console.warn(new Date().toUTCString(), 'Could not parse response from options.hostname: ' + e);
+        }
       }
     });
   }).end();
