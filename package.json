@@ -1,0 +1,10 @@
+{
+  "name": "payment-notifier",
+  "version": "1.0.0",
+  "description": "Service that notifies through e-mail when receiven a new BTC transaction on your wallet",
+  "main": "server.js",
+  "author": "Ezequiel Streitenberger <streitenberger.ezequiel@gmail.com>",
+  "dependencies": {
+    "nodemailer": "^6.3.0"
+  }
+}
