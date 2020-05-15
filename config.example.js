@@ -1,7 +1,6 @@
 module.exports = {
-  mailUser: 'notifier@mail.com',
-  mailPass: 'notifierPass',
-  mailService: 'gmail',
+  mailName: 'relay-name',
+  mailHost: 'smtp-relay.gmail.com',
   mailFrom: 'notifier@mail.com',
   mailTo: 'john.doe@mail.com',
   btcAddress: '123jh1uih3gads8ew1233asdi',

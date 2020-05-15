@@ -5,14 +5,10 @@ const config = require('./config');
 const MS_PER_MINUTE = 60000;
 
 const transporter = nodemailer.createTransport({
-  service: config.mailService ? config.mailService : 'gmail',
-  auth: {
-    user: config.mailUser,
-    pass: config.mailPass
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
+  name: config.mailName,
+  host: config.mailHost,
+  port: 587,
+  secure: false
 });
 const mailOptions = {
   from: config.mailFrom,
