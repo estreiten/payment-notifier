@@ -23,6 +23,7 @@ const httpOptions = {
 };
 let notified = false;
 
+verify()
 setInterval(verify, config.minutes * MS_PER_MINUTE);
 
 function verify() {
